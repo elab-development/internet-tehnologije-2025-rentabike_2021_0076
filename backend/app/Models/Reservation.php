@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reservation extends Model
 {
-        protected $fillable = [
+    protected $fillable = [
         'user_id',
         'bike_id',
         'start_date',
@@ -14,17 +14,19 @@ class Reservation extends Model
         'total_price',
         'status',
     ];
-     public function user()
+
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
 
     public function equipment()
     {
-        return $this->belongsTo(Equipment::class);
+        return $this->belongsTo(Equipment::class, 'bike_id');
     }
+
     public function payment()
-{
-    return $this->hasOne(Payment::class);
-}
+    {
+        return $this->hasOne(Payment::class);
+    }
 }

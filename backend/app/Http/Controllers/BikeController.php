@@ -4,19 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Bike;
+use App\Models\Equipment;
 
-class BikeController extends Controller
+class EquipmentController extends Controller
 {
     public function index()
 {
-    $bikes = Bike::all();
-        return $bikes;
+    $Equipments = Equipment::all();
+        return $Equipments;
 }
 
  public function store(Request $request)
 {
-    $bike = Bike::create([
+    $Equipment = Equipment::create([
         'name' => $request->name,
         'brand' => $request->brand,
         'type' => $request->type,
@@ -26,18 +26,18 @@ class BikeController extends Controller
         'is_available' => true
     ]);
 
-    return $bike;
+    return $Equipment;
 }
 public function show($id)
 {
-    $bike = Bike::find($id);
-    return $bike;
+    $Equipment = Equipment::find($id);
+    return $Equipment;
 }
 public function update(Request $request, $id)
 {
-    $bike = Bike::find($id);
+    $Equipment = Equipment::find($id);
 
-    $bike->update([
+    $Equipment->update([
         'name' => $request->name,
         'brand' => $request->brand,
         'type' => $request->type,
@@ -46,13 +46,13 @@ public function update(Request $request, $id)
         'image' => $request->image,
     ]);
 
-    return $bike;
+    return $Equipment;
 }
 public function destroy($id)
 {
-    $bike = Bike::find($id);
-    $bike->delete();
+    $Equipment = Equipment::find($id);
+    $Equipment->delete();
 
-    return "Bike deleted";
+    return "Equipment deleted";
 }
 }

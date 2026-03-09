@@ -8,7 +8,7 @@ class Reservation extends Model
 {
         protected $fillable = [
         'user_id',
-        'bike_id',
+        'Equipment_id',
         'start_date',
         'end_date',
         'total_price',

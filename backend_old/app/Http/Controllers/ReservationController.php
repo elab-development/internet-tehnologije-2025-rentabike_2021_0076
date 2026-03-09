@@ -17,7 +17,7 @@ public function store(Request $request)
 {
     $reservation = Reservation::create([
         'user_id' => $request->user_id,
-        'bike_id' => $request->bike_id,
+        'Equipment_id' => $request->Equipment_id,
         'start_date' => $request->start_date,
         'end_date' => $request->end_date,
         'total_price' => $request->total_price,

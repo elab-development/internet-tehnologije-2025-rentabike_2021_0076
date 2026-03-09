@@ -5,18 +5,27 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Equipment;
+use App\Enums\EquipmentType;
+use Illuminate\Validation\Rule;
 
 class EquipmentController extends Controller
 {
     public function index()
 {
-    $Equipments = Equipment::all();
-        return $Equipments;
+    $equipments = Equipment::all();
+        return $equipments;
 }
 
  public function store(Request $request)
 {
-    $Equipment = Equipment::create([
+    $request->validate([
+    'name' => 'required|string|max:255',
+    'brand' => 'required|string|max:255',
+    'type' => ['required', Rule::enum(EquipmentType::class)],
+    'price_per_hour' => 'required|numeric|min:0'
+]);
+
+    $equipment = Equipment::create([
         'name' => $request->name,
         'brand' => $request->brand,
         'type' => $request->type,
@@ -26,18 +35,18 @@ class EquipmentController extends Controller
         'is_available' => true
     ]);
 
-    return $Equipment;
+    return $equipment;
 }
 public function show($id)
 {
-    $Equipment = Equipment::find($id);
-    return $Equipment;
+    $equipment = Equipment::find($id);
+    return $equipment;
 }
 public function update(Request $request, $id)
 {
-    $Equipment = Equipment::find($id);
+    $equipment = Equipment::find($id);
 
-    $Equipment->update([
+    $equipment->update([
         'name' => $request->name,
         'brand' => $request->brand,
         'type' => $request->type,
@@ -46,12 +55,12 @@ public function update(Request $request, $id)
         'image' => $request->image,
     ]);
 
-    return $Equipment;
+    return $equipment;
 }
 public function destroy($id)
 {
-    $Equipment = Equipment::find($id);
-    $Equipment->delete();
+    $equipment = Equipment::find($id);
+    $equipment->delete();
 
     return "Equipment deleted";
 }

@@ -21,4 +21,8 @@ protected $table = 'bikes';
     {
         return $this->belongsTo(Location::class);
     }
+    public function reservations()
+{
+    return $this->hasMany(Reservation::class, 'bike_id');
+}
 }

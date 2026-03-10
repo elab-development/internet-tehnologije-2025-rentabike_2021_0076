@@ -12,8 +12,9 @@ class EquipmentController extends Controller
 {
     public function index()
 {
-    $equipments = Equipment::all();
-        return $equipments;
+    $equipments = Equipment::where('is_available', true)->get();
+
+    return $equipments;
 }
 
  public function store(Request $request)

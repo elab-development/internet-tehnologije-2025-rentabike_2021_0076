@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use OpenApi\Attributes as OA;
 
 class AuthController extends Controller
 {
@@ -34,7 +35,39 @@ class AuthController extends Controller
             'token' => $token
         ], 201);
     }
-
+    
+#[OA\Post(
+    path: '/api/login',
+    summary: 'Login korisnika',
+    tags: ['Auth'],
+    requestBody: new OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(
+            required: ['email', 'password'],
+            properties: [
+                new OA\Property(property: 'email', type: 'string', format: 'email', example: 'user@email.com'),
+                new OA\Property(property: 'password', type: 'string', format: 'password', example: 'password123')
+            ]
+        )
+    ),
+    responses: [
+        new OA\Response(
+            response: 200,
+            description: 'Uspešan login',
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'message', type: 'string', example: 'Login successful'),
+                    new OA\Property(property: 'token', type: 'string', example: '1|abcdef123456'),
+                    new OA\Property(property: 'user', type: 'object')
+                ]
+            )
+        ),
+        new OA\Response(
+            response: 422,
+            description: 'Pogrešan email ili password'
+        )
+    ]
+)]
     public function login(Request $request)
     {
         $request->validate([

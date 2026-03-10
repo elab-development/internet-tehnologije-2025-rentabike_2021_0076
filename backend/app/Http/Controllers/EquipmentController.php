@@ -7,9 +7,35 @@ use Illuminate\Http\Request;
 use App\Models\Equipment;
 use App\Enums\EquipmentType;
 use Illuminate\Validation\Rule;
+use OpenApi\Attributes as OA;
 
 class EquipmentController extends Controller
 {
+    #[OA\Get(
+    path: '/api/equipment',
+    summary: 'Prikaz dostupne opreme',
+    tags: ['Equipment'],
+    responses: [
+        new OA\Response(
+            response: 200,
+            description: 'Lista dostupne opreme',
+            content: new OA\JsonContent(
+                type: 'array',
+                items: new OA\Items(
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'id', type: 'integer', example: 1),
+                        new OA\Property(property: 'name', type: 'string', example: 'Mountain Bike'),
+                        new OA\Property(property: 'brand', type: 'string', example: 'Trek'),
+                        new OA\Property(property: 'type', type: 'string', example: 'bike'),
+                        new OA\Property(property: 'price_per_hour', type: 'number', format: 'float', example: 15),
+                        new OA\Property(property: 'is_available', type: 'boolean', example: true)
+                    ]
+                )
+            )
+        )
+    ]
+)]
     public function index()
 {
     $equipments = Equipment::where('is_available', true)->get();

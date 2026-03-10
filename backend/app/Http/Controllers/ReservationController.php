@@ -6,9 +6,41 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Reservation;
 use App\Models\Equipment;
+use OpenApi\Attributes as OA;
 
 class ReservationController extends Controller
 {
+    #[OA\Get(
+    path: '/api/reservations',
+    summary: 'Prikaz mojih rezervacija',
+    tags: ['Reservations'],
+    security: [['bearerAuth' => []]],
+    responses: [
+        new OA\Response(
+            response: 200,
+            description: 'Lista rezervacija ulogovanog korisnika',
+            content: new OA\JsonContent(
+                type: 'array',
+                items: new OA\Items(
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'id', type: 'integer', example: 1),
+                        new OA\Property(property: 'user_id', type: 'integer', example: 3),
+                        new OA\Property(property: 'bike_id', type: 'integer', example: 5),
+                        new OA\Property(property: 'start_date', type: 'string', format: 'date', example: '2026-03-10'),
+                        new OA\Property(property: 'end_date', type: 'string', format: 'date', example: '2026-03-12'),
+                        new OA\Property(property: 'total_price', type: 'number', format: 'float', example: 40),
+                        new OA\Property(property: 'status', type: 'string', example: 'pending')
+                    ]
+                )
+            )
+        ),
+        new OA\Response(
+            response: 401,
+            description: 'Unauthenticated'
+        )
+    ]
+)]
     public function index(Request $request)
     {
         $reservations = Reservation::with('equipment')
@@ -17,7 +49,44 @@ class ReservationController extends Controller
 
         return response()->json($reservations, 200);
     }
-
+#[OA\Post(
+    path: '/api/reservations',
+    summary: 'Kreiranje rezervacije',
+    tags: ['Reservations'],
+    security: [['bearerAuth' => []]],
+    requestBody: new OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(
+            required: ['bike_id', 'start_date', 'end_date', 'total_price'],
+            properties: [
+                new OA\Property(property: 'bike_id', type: 'integer', example: 5),
+                new OA\Property(property: 'start_date', type: 'string', format: 'date', example: '2026-03-10'),
+                new OA\Property(property: 'end_date', type: 'string', format: 'date', example: '2026-03-12'),
+                new OA\Property(property: 'total_price', type: 'number', format: 'float', example: 40)
+            ]
+        )
+    ),
+    responses: [
+        new OA\Response(
+            response: 201,
+            description: 'Rezervacija uspešno kreirana',
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'message', type: 'string', example: 'Reservation created successfully.'),
+                    new OA\Property(property: 'reservation', type: 'object')
+                ]
+            )
+        ),
+        new OA\Response(
+            response: 401,
+            description: 'Unauthenticated'
+        ),
+        new OA\Response(
+            response: 422,
+            description: 'Validation error or equipment unavailable'
+        )
+    ]
+)]
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -53,6 +122,40 @@ class ReservationController extends Controller
         ], 201);
     }
 
+    #[OA\Delete(
+    path: '/api/reservations/{id}',
+    summary: 'Otkazivanje rezervacije',
+    tags: ['Reservations'],
+    security: [['bearerAuth' => []]],
+    parameters: [
+        new OA\Parameter(
+            name: 'id',
+            description: 'ID rezervacije',
+            in: 'path',
+            required: true,
+            schema: new OA\Schema(type: 'integer')
+        )
+    ],
+    responses: [
+        new OA\Response(
+            response: 200,
+            description: 'Rezervacija uspešno otkazana',
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'message', type: 'string', example: 'Reservation cancelled successfully.')
+                ]
+            )
+        ),
+        new OA\Response(
+            response: 401,
+            description: 'Unauthenticated'
+        ),
+        new OA\Response(
+            response: 404,
+            description: 'Reservation not found'
+        )
+    ]
+)]
     public function destroy(Request $request, $id)
     {
         $reservation = Reservation::where('id', $id)

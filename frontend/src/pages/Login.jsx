@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [poruka, setPoruka] = useState("");
+
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -26,11 +29,12 @@ function Login() {
       console.log(data);
 
       if (response.ok) {
-  localStorage.setItem("token", data.token);
-  setPoruka("Uspešna prijava.");
-} else {
-  setPoruka("Prijava nije uspela.");
-}
+        localStorage.setItem("token", data.token);
+        setPoruka("Uspešna prijava.");
+        navigate("/");
+      } else {
+        setPoruka("Prijava nije uspela.");
+      }
     } catch (error) {
       console.error(error);
       setPoruka("Došlo je do greške.");

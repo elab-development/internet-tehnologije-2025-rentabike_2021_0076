@@ -26,8 +26,6 @@ function Login() {
 
       const data = await response.json();
 
-      console.log(data);
-
       if (response.ok) {
         localStorage.setItem("token", data.token);
         setPoruka("Uspešna prijava.");
@@ -42,40 +40,112 @@ function Login() {
   };
 
   return (
-    <div style={{ padding: "40px" }}>
-      <h1>Prijava korisnika</h1>
+    <div
+      style={{
+        maxWidth: "1800px",
+        margin: "0 auto",
+        padding: "40px 20px"
+      }}
+    >
+      <h1
+        style={{
+          textAlign: "center",
+          marginBottom: "10px",
+          fontSize: "36px"
+        }}
+      >
+        Prijava korisnika
+      </h1>
 
-      <form onSubmit={handleLogin} style={{ marginTop: "20px" }}>
-        <div>
-          <label>Email:</label>
-          <br />
-          <input
-            type="email"
-            placeholder="Unesite email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
+      <p
+        style={{
+          textAlign: "center",
+          color: "#6b7280",
+          marginBottom: "30px"
+        }}
+      >
+        Unesi svoje podatke za pristup aplikaciji
+      </p>
 
-        <br />
+    <div
+  style={{
+    width: "100%",
+    backgroundColor: "#ffffff",
+    border: "1px solid #e5e7eb",
+    borderRadius: "14px",
+    padding: "30px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+    boxSizing: "border-box"
+  }}
+>
+        <form onSubmit={handleLogin}>
+          <div style={{ marginBottom: "20px" }}>
+            <label style={{ fontWeight: "bold" }}>Email:</label>
+            <br />
+            <input
+              type="email"
+              placeholder="Unesite email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={{
+                width: "100%",
+                marginTop: "8px",
+                padding: "12px",
+                borderRadius: "8px",
+                border: "1px solid #d1d5db",
+                boxSizing: "border-box"
+              }}
+            />
+          </div>
 
-        <div>
-          <label>Lozinka:</label>
-          <br />
-          <input
-            type="password"
-            placeholder="Unesite lozinku"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+          <div style={{ marginBottom: "20px" }}>
+            <label style={{ fontWeight: "bold" }}>Lozinka:</label>
+            <br />
+            <input
+              type="password"
+              placeholder="Unesite lozinku"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              style={{
+                width: "100%",
+                marginTop: "8px",
+                padding: "12px",
+                borderRadius: "8px",
+                border: "1px solid #d1d5db",
+                boxSizing: "border-box"
+              }}
+            />
+          </div>
 
-        <br />
+          <button
+            type="submit"
+            style={{
+              width: "100%",
+              padding: "12px",
+              borderRadius: "8px",
+              border: "none",
+              backgroundColor: "#2563eb",
+              color: "white",
+              fontWeight: "bold",
+              cursor: "pointer"
+            }}
+          >
+            Prijavi se
+          </button>
+        </form>
 
-        <button type="submit">Prijavi se</button>
-      </form>
-
-      <p>{poruka}</p>
+        {poruka && (
+          <p
+            style={{
+              marginTop: "20px",
+              textAlign: "center",
+              color: poruka === "Uspešna prijava." ? "green" : "#dc2626"
+            }}
+          >
+            {poruka}
+          </p>
+        )}
+      </div>
     </div>
   );
 }

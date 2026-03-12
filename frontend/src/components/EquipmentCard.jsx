@@ -1,9 +1,19 @@
 function EquipmentCard({ item, refreshEquipment }) {
 
+  const typeLabels = {
+    bicycle: "Bicikl",
+    electric_bike: "Električni bicikl",
+    scooter: "Trotinet",
+    electric_scooter: "Električni trotinet",
+    roller: "Roleri"
+  };
+
   const getIcon = (type) => {
-    if (type === "bike") return "🚲";
+    if (type === "bicycle") return "🚲";
+    if (type === "electric_bike") return "⚡🚲";
     if (type === "scooter") return "🛴";
-    if (type === "rollers") return "🛼";
+    if (type === "electric_scooter") return "⚡🛴";
+    if (type === "roller") return "🛼";
     return "📦";
   };
 
@@ -70,11 +80,11 @@ function EquipmentCard({ item, refreshEquipment }) {
         </p>
 
         <p style={{ margin: "6px 0" }}>
-          <strong>Tip opreme:</strong> {item.type}
+          <strong>Tip opreme:</strong> {typeLabels[item.type] || item.type}
         </p>
 
         <p style={{ margin: "6px 0" }}>
-          <strong>Cena po satu:</strong> {item.price_per_hour} €
+          <strong>Cena po satu:</strong> {item.price_per_hour} RSD / sat
         </p>
 
         {item.description && (

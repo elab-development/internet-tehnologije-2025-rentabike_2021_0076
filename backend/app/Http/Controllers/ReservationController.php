@@ -156,6 +156,7 @@ class ReservationController extends Controller
         )
     ]
 )]
+
     public function destroy(Request $request, $id)
     {
         $reservation = Reservation::where('id', $id)

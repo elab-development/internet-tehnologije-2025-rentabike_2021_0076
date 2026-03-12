@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import EquipmentCard from "../components/EquipmentCard";
+import LocationMap from "../components/LocationMap";
+import StatisticsChart from "../components/StatisticsChart";
 
 function Home() {
   const [equipment, setEquipment] = useState([]);
+  const [selectedType, setSelectedType] = useState("all");
 
   const fetchEquipment = () => {
     fetch("http://127.0.0.1:8000/api/equipment")
@@ -14,6 +17,11 @@ function Home() {
   useEffect(() => {
     fetchEquipment();
   }, []);
+
+  const filteredEquipment =
+    selectedType === "all"
+      ? equipment
+      : equipment.filter((item) => item.type === selectedType);
 
   return (
     <div
@@ -45,20 +53,71 @@ function Home() {
 
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-          gap: "20px",
-          marginTop: "30px"
+          display: "flex",
+          justifyContent: "center",
+          flexWrap: "wrap",
+          gap: "10px",
+          marginBottom: "30px"
         }}
       >
-        {equipment.map((item) => (
-          <EquipmentCard
-            key={item.id}
-            item={item}
-            refreshEquipment={fetchEquipment}
-          />
-        ))}
+        <button onClick={() => setSelectedType("all")}>Sve</button>
+        <button onClick={() => setSelectedType("bicycle")}>Bicikli</button>
+        <button onClick={() => setSelectedType("electric_bike")}>
+          Električni bicikli
+        </button>
+        <button onClick={() => setSelectedType("scooter")}>Trotineti</button>
+        <button onClick={() => setSelectedType("electric_scooter")}>
+          Električni trotineti
+        </button>
+        <button onClick={() => setSelectedType("roller")}>Roleri</button>
       </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gap: "20px",
+          marginTop: "30px",
+          alignItems: "stretch"
+        }}
+      >
+        {filteredEquipment.length === 0 ? (
+          <p style={{ gridColumn: "1 / -1", textAlign: "center" }}>
+            Trenutno nema dostupne opreme za ovaj tip.
+          </p>
+        ) : (
+          filteredEquipment.map((item) => (
+            <EquipmentCard
+              key={item.id}
+              item={item}
+              refreshEquipment={fetchEquipment}
+            />
+          ))
+        )}
+      </div>
+
+      <h2
+        style={{
+          textAlign: "center",
+          marginTop: "60px",
+          marginBottom: "20px"
+        }}
+      >
+        Lokacija opreme
+      </h2>
+
+      <LocationMap />
+      <h2
+  style={{
+    textAlign: "center",
+    marginTop: "60px",
+    marginBottom: "20px",
+  }}
+>
+  Statistika rezervacija
+</h2>
+
+<StatisticsChart />
     </div>
   );
 }
